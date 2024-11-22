@@ -1,0 +1,5 @@
+{
+  "ios": {
+    "bundleIdentifier": "com.mitchellkealy.react-native-ble-manager"
+  }
+}
