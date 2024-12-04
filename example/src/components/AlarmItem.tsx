@@ -1,23 +1,24 @@
+// src/components/AlarmItem.tsx
+
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Switch } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { Alarm } from '../types/Alarm';
 
 interface AlarmItemProps {
-  item: string;
-  index: number;
-  deleteAlarm: (index: number) => void;
-  toggleAlarm: (index: number, enabled: boolean) => void;
+  item: Alarm;
+  deleteAlarm: (id: number) => void;
+  toggleAlarm: (id: number, enabled: boolean) => void;
 }
 
-const AlarmItem: React.FC<AlarmItemProps> = ({ item, index, deleteAlarm, toggleAlarm }) => {
-  const [id, time, enabled] = item.split(',');
-  const isEnabled = enabled === '1';
+const AlarmItem: React.FC<AlarmItemProps> = ({ item, deleteAlarm, toggleAlarm }) => {
+  const { id, time, enabled } = item;
 
   const handleToggle = (value: boolean) => {
-    toggleAlarm(index, value);
+    toggleAlarm(id, value);
   };
 
-  const cardStyle = isEnabled ? styles.card : [styles.card, styles.cardDisabled];
+  const cardStyle = enabled ? styles.card : [styles.card, styles.cardDisabled];
 
   return (
     <View style={cardStyle}>
@@ -26,8 +27,8 @@ const AlarmItem: React.FC<AlarmItemProps> = ({ item, index, deleteAlarm, toggleA
         <Text style={styles.idText}>Alarm ID: {id}</Text>
       </View>
       <View style={styles.actions}>
-        <Switch value={isEnabled} onValueChange={handleToggle} />
-        <TouchableOpacity onPress={() => deleteAlarm(index)} style={styles.deleteButton}>
+        <Switch value={enabled} onValueChange={handleToggle} accessibilityLabel={`Toggle Alarm ${id}`} />
+        <TouchableOpacity onPress={() => deleteAlarm(id)} style={styles.deleteButton} accessibilityLabel={`Delete Alarm ${id}`}>
           <Icon name="delete" size={24} color="#ff3b30" />
         </TouchableOpacity>
       </View>
@@ -41,9 +42,9 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 16,
     marginBottom: 12,
-    flexDirection: 'row' as const,
-    alignItems: 'center' as const,
-    justifyContent: 'space-between' as const,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -58,7 +59,7 @@ const styles = StyleSheet.create({
   },
   timeText: {
     fontSize: 32,
-    fontWeight: 'bold' as const,
+    fontWeight: 'bold',
     color: '#000',
   },
   idText: {
@@ -67,8 +68,8 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   actions: {
-    flexDirection: 'row' as const,
-    alignItems: 'center' as const,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   deleteButton: {
     marginLeft: 16,

@@ -1,3 +1,5 @@
+// src/components/LoadingModal.tsx
+
 import React from 'react';
 import {
   Modal,

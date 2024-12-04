@@ -1,18 +1,38 @@
+// src/components/AlarmList.tsx
+
 import React from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import AlarmItem from './AlarmItem';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { Alarm } from '../types/Alarm';
 
 interface AlarmListProps {
-  alarms: string[];
-  deleteAlarm: (index: number) => void;
-  toggleAlarm: (index: number, enabled: boolean) => void;
+  alarms: Alarm[];
+  deleteAlarm: (id: number) => void;
+  toggleAlarm: (id: number, enabled: boolean) => void;
   openModal: () => void;
 }
 
 const AlarmList: React.FC<AlarmListProps> = ({ alarms, deleteAlarm, toggleAlarm, openModal }) => {
-  const renderAlarmItem = ({ item, index }: { item: string; index: number }) => (
-    <AlarmItem item={item} index={index} deleteAlarm={deleteAlarm} toggleAlarm={toggleAlarm} />
+  // Debugging Statement
+  console.log('AlarmList props:', { alarms, deleteAlarm, toggleAlarm, openModal });
+
+  // Defensive Check
+  if (!alarms || !Array.isArray(alarms)) {
+    console.warn('AlarmList received undefined or invalid alarms prop.');
+    return (
+      <View style={styles.noAlarmsContainer}>
+        <Text style={styles.noAlarmsText}>No alarms available.</Text>
+      </View>
+    );
+  }
+
+  const renderAlarmItem = ({ item }: { item: Alarm }) => (
+    <AlarmItem
+      item={item}
+      deleteAlarm={deleteAlarm}
+      toggleAlarm={toggleAlarm}
+    />
   );
 
   return (
@@ -25,12 +45,12 @@ const AlarmList: React.FC<AlarmListProps> = ({ alarms, deleteAlarm, toggleAlarm,
         <FlatList
           data={alarms}
           renderItem={renderAlarmItem}
-          keyExtractor={(_, index) => index.toString()}
+          keyExtractor={(item) => item.id.toString()} // Convert number to string
           contentContainerStyle={styles.alarmList}
         />
       )}
 
-      <TouchableOpacity onPress={openModal} style={styles.createButton}>
+      <TouchableOpacity onPress={openModal} style={styles.createButton} accessibilityLabel="Create Alarm">
         <Icon name="add" size={28} color="#fff" />
       </TouchableOpacity>
     </View>
@@ -43,8 +63,8 @@ const styles = StyleSheet.create({
   },
   noAlarmsContainer: {
     flex: 1,
-    justifyContent: 'center' as const,
-    alignItems: 'center' as const,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   noAlarmsText: {
     fontSize: 18,
@@ -56,15 +76,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#f0f0f0',
   },
   createButton: {
-    position: 'absolute' as const,
+    position: 'absolute',
     bottom: 32,
     right: 32,
     backgroundColor: '#007AFF',
     borderRadius: 28,
     width: 56,
     height: 56,
-    alignItems: 'center' as const,
-    justifyContent: 'center' as const,
+    alignItems: 'center',
+    justifyContent: 'center',
     elevation: 5,
   },
 });

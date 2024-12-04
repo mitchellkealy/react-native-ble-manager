@@ -1,3 +1,5 @@
+// src/components/Header.tsx
+
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
@@ -24,18 +26,21 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     borderBottomWidth: 1,
     borderBottomColor: '#ddd',
+    backgroundColor: '#f9f9f9',
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
   },
   sendButton: {
-    // Your styles here
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    backgroundColor: '#007AFF',
+    borderRadius: 8,
   },
   sendButtonText: {
     fontSize: 16,
-    color: '#007AFF',
-    marginLeft: 8,
+    color: '#fff',
   },
 });
 
